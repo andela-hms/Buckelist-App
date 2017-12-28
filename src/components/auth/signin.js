@@ -13,6 +13,15 @@ const renderInput = field => {
 }
 
 class Signin extends Component {
+    _renderAlert() {
+        if (this.props.errorMessage) {
+            return (
+                <div className="alert alert-danger">
+                    <strong>Oops!</strong> {this.props.errorMessage}
+                </div>
+            );
+        }
+    }
     render () {
         const { handleSubmit } = this.props;
         return (
@@ -28,7 +37,7 @@ class Signin extends Component {
                     <Field name="password" 
                         type="password" component={renderInput} />
                 </div>
-
+                {this._renderAlert()}
                 <button action="submit" className="btn btn-primary"> Sign in </button>
             </Form>
         );
@@ -46,7 +55,7 @@ class Signin extends Component {
 // }, null, actions) (Signin);
 
 function mapStateToProps(state) {
-    return { form: state.form };
+    return { form: state.form, errorMessage: state.auth.error };
 }
 
 Signin = connect(mapStateToProps, actions)(Signin);
