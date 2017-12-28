@@ -1,31 +1,56 @@
 import React, { Component } from 'react';
-import { reduxForm } from 'redux-form';
+import { reduxForm, Field, Form } from 'redux-form';
+import * as actions from '../../actions';
+import {connect} from 'react-redux';
+
+const renderInput = field => {
+    const { input, type } = field;
+    return (
+        <div>
+            <input {...input} type={type} className="form-control" />
+        </div>
+    );
+}
 
 class Signin extends Component {
     render () {
-        const { handleSubmit, fields: { email, password }} = this.props;
+        const { handleSubmit } = this.props;
         return (
-            <form onSubmit={handleSubmit(this._handleFormSubmit.bind(this))}>
-                <fieldset className="form-group">
+            <Form onSubmit={handleSubmit(this._handleFormSubmit.bind(this))}>
+                <div className="form-group">
                     <label> Email: </label>
-                    <input {...email} className="form-control"/>
-                </fieldset>
+                    <Field name="email" 
+                        type="email" component={renderInput} />
+                </div>
 
-                <fieldset className="form-group">
+                <div className="form-group">
                     <label> Password: </label>
-                    <input {...password} className="form-control"/>
-                </fieldset>
+                    <Field name="password" 
+                        type="password" component={renderInput} />
+                </div>
+
                 <button action="submit" className="btn btn-primary"> Sign in </button>
-            </form>
+            </Form>
         );
     }
 
     _handleFormSubmit({ email, password }) {
         console.log(email, password);
+        this.props.SignInUser({email, password})
     }
 }
 
-export default reduxForm({
-    form: 'Signin',
-    fields: ['email', 'password']
-}) (Signin);
+// export default reduxForm({
+//     form: 'Signin',
+//     fields: ['email', 'password']
+// }, null, actions) (Signin);
+
+function mapStateToProps(state) {
+    return { form: state.form };
+}
+
+Signin = connect(mapStateToProps, actions)(Signin);
+Signin = reduxForm({
+ form: 'signin'
+})(Signin);
+export default Signin;
