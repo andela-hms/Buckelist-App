@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { browserHistory } from 'react-router';
-import { AUTH_USER, AUTH_ERROR } from './types';
+import { AUTH_USER, AUTH_ERROR, UNAUTH_USER } from './types';
 
 const API_URL = 'http://127.0.0.1:5000/api/v1.0/';
 
@@ -29,5 +29,12 @@ export function authError(error) {
     return {
         type: AUTH_ERROR,
         payload: error
+    };
+}
+
+export function SignOutUser() {
+    localStorage.removeItem('auth_token');
+    return {
+        type: UNAUTH_USER,
     };
 }
