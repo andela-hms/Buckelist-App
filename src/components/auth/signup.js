@@ -16,7 +16,7 @@ class SignUp extends Component {
     render() {
         const { handleSubmit } = this.props;
         return (
-            <Form>
+            <Form onSubmit={handleSubmit(this._handleFormSubmit.bind(this))}>
                 <div className="form-group">
                     <label> Username: </label>
                     <Field name="username" 
@@ -40,16 +40,30 @@ class SignUp extends Component {
                     <Field name="retypePassword" 
                         type="password" component={renderInput} />
                 </div>
-
+                { this._renderAlert() }
                 <button action="submit" className="btn btn-primary"> Sign up </button>
             </Form> 
         );
     }
 
-    _handleFormSubmit({ username, email, password, retypePassword }) {
-        console.log(email, password);
-        this.props.SignInUser({email, password})
+    _handleFormSubmit(formProps) {
+        // call action creator to sign up the user
+        this.props.signUpUser(formProps);
     }
+
+    _renderAlert() {
+        if (this.props.errorMessage) {
+            return (
+                <div className="alert alert-danger">
+                    <strong>Oops!</strong> {this.props.errorMessage}
+                </div>
+            );
+        }
+    }
+}
+
+function mapStateToProps(state) {
+    return { form: state.form, errorMessage: state.auth.error };
 }
 
 function validate(formProps) {
@@ -62,5 +76,5 @@ function validate(formProps) {
     return errors;
 }
 
-const form = reduxForm({ form: 'signup', validate });
-export default connect(null, actions)(form(SignUp));
+const signUpForm = reduxForm({ form: 'signup', validate });
+export default connect(mapStateToProps, actions)(signUpForm(SignUp));

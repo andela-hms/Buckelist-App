@@ -13,15 +13,7 @@ const renderInput = field => {
 }
 
 class Signin extends Component {
-    _renderAlert() {
-        if (this.props.errorMessage) {
-            return (
-                <div className="alert alert-danger">
-                    <strong>Oops!</strong> {this.props.errorMessage}
-                </div>
-            );
-        }
-    }
+
     render () {
         const { handleSubmit } = this.props;
         return (
@@ -46,6 +38,16 @@ class Signin extends Component {
     _handleFormSubmit({ email, password }) {
         console.log(email, password);
         this.props.SignInUser({email, password})
+    }
+
+    _renderAlert() {
+        if (this.props.errorMessage) {
+            return (
+                <div className="alert alert-danger">
+                    <strong>Oops!</strong> {this.props.errorMessage}
+                </div>
+            );
+        }
     }
 }
 
