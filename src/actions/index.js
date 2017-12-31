@@ -51,7 +51,7 @@ export function authError(error) {
 }
 
 export function SignOutUser() {
-    localStorage.removeItem('auth_token');
+    localStorage.removeItem('token');
     return {
         type: UNAUTH_USER, 
     };
