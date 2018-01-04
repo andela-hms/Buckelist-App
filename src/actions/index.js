@@ -4,23 +4,40 @@ import { AUTH_USER, AUTH_ERROR, UNAUTH_USER } from './types';
 
 const API_URL = 'http://127.0.0.1:5000/api/v1.0/';
 
-export function SignInUser({ email, password }) {
+/**
+ * Authenticate user Action
+ * 
+ * @param {string} token 
+ */
+export const signUser = (token) => {
+    return {
+        type: AUTH_USER,
+        payload: token
+    }
+}
+
+/**
+ * 
+ * @param {string} email - user email
+ * @param {string} password - user password 
+ */
+export const signInUser = ({ email, password }) => {
     return function(dispatch) {
         // Submit email/password to server
         axios.post(`${API_URL}auth/login/`, {email, password})
-            .then(response=> {
+            .then((response) => {
                 // if request is good ...
                 // - update state to indicate user is auth
-                dispatch( {type: AUTH_USER} );
+                dispatch(signUser(response.data.auth_token));
                 // - save the jwt token
                 localStorage.setItem('token', response.data.auth_token);
                 // - redirect to route 'feature'
                 browserHistory.push('/feature');
             })
-            .catch(serve =>
+            .catch(error =>
                 // If request is bad ...
                 // - show an error to the user
-                dispatch(authError(serve.response.data.message)));
+                dispatch(authError(error)));
     }
 }
 
@@ -36,10 +53,10 @@ export function signUpUser({ username, email, password}) {
             // - redirect to route 'feature'
             browserHistory.push('/feature');
         })
-        .catch(serve =>
+        .catch(response =>
             // If request is bad ...
             // - show an  error to the user
-            dispatch(authError(serve.response.data.message)));        
+            dispatch(authError(response.data.message)));        
     }
 }
 
@@ -55,4 +72,19 @@ export function SignOutUser() {
     return {
         type: UNAUTH_USER, 
     };
+}
+
+export function fetchMessage() {
+    return function(dispatch) {
+      axios.get(`${API_URL}bucketlists/`, {
+        headers: { Authorization: localStorage.getItem('token') }
+      })
+        .then(response => {
+        console.log(response, 'after getting response');
+          dispatch({
+            type: FETCH_MESSAGE,
+            payload: response.data.message
+          });
+        });
+    }
 }

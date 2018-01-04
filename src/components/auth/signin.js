@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { reduxForm, Field, Form } from 'redux-form';
-import * as actions from '../../actions';
+import { signInUser } from '../../actions';
+import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
 
 const renderInput = field => {
@@ -13,9 +14,14 @@ const renderInput = field => {
 }
 
 class Signin extends Component {
+    constructor(props) {
+        super(props);
+    }
 
     render () {
+
         const { handleSubmit } = this.props;
+        
         return (
             <Form onSubmit={handleSubmit(this._handleFormSubmit.bind(this))}>
                 <div className="form-group">
@@ -36,8 +42,7 @@ class Signin extends Component {
     }
 
     _handleFormSubmit({ email, password }) {
-        console.log(email, password);
-        this.props.SignInUser({email, password})
+        this.props.signInUser({email, password})
     }
 
     _renderAlert() {
@@ -60,8 +65,13 @@ function mapStateToProps(state) {
     return { form: state.form, errorMessage: state.auth.error };
 }
 
-Signin = connect(mapStateToProps, actions)(Signin);
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+    signInUser
+}, dispatch)
+
+Signin = connect(mapStateToProps, mapDispatchToProps)(Signin);
 Signin = reduxForm({
  form: 'signin'
 })(Signin);
+
 export default Signin;
