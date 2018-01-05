@@ -16,7 +16,7 @@ class Header extends Component {
     }
 
     _renderLinks() {
-        if (this.props.authenticated) {
+        if (this.props.authenticate) {
             return (
                 <li className="nav-item">
                     <Link className="nav-link" to="/signout" > Sign Out </Link>

@@ -74,16 +74,29 @@ export function SignOutUser() {
     };
 }
 
+/**
+ * Get headers
+ * 
+ * @param {}  
+ */
+
+const getHeaders = () => {
+    return {
+        Authorization: `Token ${localStorage.getItem('token')}`
+    };
+}
+
 export function fetchMessage() {
     return function(dispatch) {
-      axios.get(`${API_URL}bucketlists/`, {
-        headers: { Authorization: localStorage.getItem('token') }
+        axios.get(`${API_URL}bucketlists/`, {
+        headers: getHeaders()
       })
         .then(response => {
-        console.log(response, 'after getting response');
           dispatch({
             type: FETCH_MESSAGE,
             payload: response.data.message
+          }).catch((error) => {
+              console.log(error);
           });
         });
     }

@@ -8,7 +8,6 @@ import {
 export default function(state = {}, action) {
     switch(action.type) {
         case AUTH_USER: 
-            console.log(action, 'in Auth user reducer');
             return { ...state, error: '', authenticate: true };
         case UNAUTH_USER:
             return { ...state, authenticate: false };
